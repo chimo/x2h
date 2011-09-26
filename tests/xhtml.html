@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<!-- Comment test -->
+
+<head profile="http://example.com">
+    <title>Document Title</title>
+    <meta name="description" scheme="ISO639-2/T" content="eng" />
+    <link rev="home" charset="UTF-8" href="styles.css" type="text/css" rel="stylesheet" />
+</head>
+<body>
+
+    <div>
+        <!-- Testing deprecated elements from XHTML 1.0 Strict to HTML5 -->
+
+        <h1><a name="anchor" id="anchor">Level One Heading, <acronym title="Hypertext Markup Language">HTML</acronym></a></h1>
+        
+        <table summary="Table summary" cellpadding="5" cellspacing="2">
+            <tr>
+                <th scope="col" axis="test" abbr="Abbreviation">abbr.</th>
+                <th scope="col" axis="test" valign="top">Table Heading</th>
+            </tr>
+            <tr>
+                <td scope="row" valign="bottom">Table Data</td>
+                <td axis="test" abbr="Abbreviation">abbr.</td>
+            </tr>
+        </table>
+        
+        <big><a href="http://example.com" rev="alternate" charset="UTF-8">Big link</a></big>
+
+        <big class="foo bar"><a href="http://example.com" rev="alternate" charset="UTF-8">Big link</a></big>
+        
+        <object standby="Please wait" archive="http://example.com" classid="2" codebase="http://example.com" data="planets.gif" declare="declare" codetype="image/gif" usemap="#Map1">
+            <param name="foo" value="bar" valuetype="data" type="image/gif" />
+            <map name="Map1" id="Map1">
+                <area href="sun.htm" shape="rect" coords="0,0,82,126" nohref="nohref" alt="Sun" />
+            </map>
+        </object>
+
+        <a href="sun.htm" shape="rect" coords="0,0,82,126">The Sun</a>
+        <a href="mercur.htm" shape="circle" coords="90,58,3">Mercury</a>
+        <a href="venus.htm" shape="circle" coords="124,58,8">Venus</a>
+        
+        <img src="planets.gif" alt="Planets" usemap="#planetmap" longdesc="example.html" />
+
+        <map name="planetmap" id="planetmap">
+          <area href="sun.htm" shape="rect" coords="0,0,82,126" nohref="nohref" alt="Sun" />
+          <area href="mercur.htm" shape="circle" coords="90,58,3" nohref="nohref" alt="Mercury" />
+          <area href="venus.htm" shape="circle" coords="124,58,8" nohref="nohref" alt="Venus" />
+        </map>
+        
+        <tt>Random teletype font!</tt>
+
+        <tt class='bar foo'>Random teletype font!</tt>
+
+    </div>
+
+</body>
+</html>
