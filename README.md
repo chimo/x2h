@@ -15,19 +15,18 @@ Note that this will not _add_ any new HTML5 elements/features to your pages. It 
 
 ## What exacly does this do to my documents?
 
-* Replaces <acronym> with <abbr>
-* Replaces <big> with <span class="big">
-* Replaces <tt> with <span class="tt">
-* Removes @summary from <table>
-* Replaces @cellpadding/@cellspacing with a class (ex: class="cellpadding5" instead of cellpadding="5") on <table>
-* Removes @nohref from <area>
-* Removes @profile from <head>
-* Removes @archive, @classid, @codebase, @codetype, @declare, @standby from <object>
-* Removes @type and @valuetype from <param>
-* Removes @charset, @name, @rev and @shape from <a>
-* Removes @charset and @rev from <link>
-* Removes @abbr, @axis, @valid from <td> and <th>
-* Removes @scope from <td>
-* Removes @scheme from <meta>
-* Removes @longdesc from <img>
-
+* Replaces &lt;acronym&gt; with &lt;abbr&gt;
+* Replaces &lt;big&gt; with &lt;span class="big"&gt;
+* Replaces &lt;tt&gt; with &lt;span class="tt"&gt;
+* Removes @summary from &lt;table&gt;
+* Replaces @cellpadding/@cellspacing with a class (ex: class="cellpadding5" instead of cellpadding="5") on &lt;table&gt;
+* Removes @nohref from &lt;area&gt;
+* Removes @profile from &lt;head&gt;
+* Removes @archive, @classid, @codebase, @codetype, @declare, @standby from &lt;object&gt;
+* Removes @type and @valuetype from &lt;param&gt;
+* Removes @charset, @name, @rev and @shape from &lt;a&gt;
+* Removes @charset and @rev from &lt;link&gt;
+* Removes @abbr, @axis, @valid from &lt;td&gt; and &lt;th&gt;
+* Removes @scope from &lt;td&gt;
+* Removes @scheme from &lt;meta&gt;
+* Removes @longdesc from &lt;img&gt;
