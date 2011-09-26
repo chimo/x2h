@@ -1,5 +1,6 @@
 // Tested on:
 //  * Firefox 3.6.21, 6.0.2, 8.0a2
+//  * Chromium 14.0.835.186
 
 /**
  * Returns whether the zip file is empty or not
@@ -87,17 +88,38 @@ var x2h = {
             }
             var reader = new FileReader();
 
-            // FIXME: This is not being called even when getting the following in console:
+            // FIXME: I could not get Firefox to use the onerror event handler. Even when getting: 
             // Component returned failure code: 0x80520012 (NS_ERROR_FILE_NOT_FOUND) [nsIDOMFileReader.readAsText]
             reader.onerror = (function(theFile) {
                 return function(e) {
-                    x2h.output.innerHTML += '<li>Error reading file: <em>' + theFile.name + '</em>. Skipping.</li>';
+                    var msg = '';
+                    switch(e.target.error.code) {
+                        case FileError.NOT_FOUND_ERR:
+                            msg = 'File not found';
+                            break;
+                        case FileError.SECURITY_ERR:
+                            msg = 'Security error';
+                            break;
+                        case FileError.ABORT_ERR:
+                            msg = 'Operation aborted';
+                            break;
+                        case FileError.NOT_READABLE_ERR:
+                            msg = 'File not readable';
+                            break;
+                        case FileError.ENCODING_ERR:
+                            msg = 'Encoding error';
+                            break;
+                        default:
+                            msg = 'Unknown error code: ' + e.target.error.code;
+                    }
+
+                    x2h.output.innerHTML += '<li>Error reading file: <em>' + theFile.name + '</em> (' + msg + '). Skipping.</li>';
                 };
             })(f);
 
             // Callback function after the file is read
             reader.onload = (function(theFile) {
-                return function(e) { // FIXME: Chromium 13.0.782.218 craps out here
+                return function(e) { 
                     // XHTML 1.0 Strict to HTML5 cleanup
                     var html5Content = ''; 
                     
