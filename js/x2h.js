@@ -131,13 +131,24 @@ var x2h = {
                         x2h.dropZone.innerHTML = 'File ' + (x2h.completedCount+1) + ' of ' + files.length + ' completed';
                     }
                     catch(err) {
-                        var srcTxt = err.getElementsByTagName('sourcetext')[0]; // TODO: Arrow doesn't point at correct location
+                        var srcTxt = err.getElementsByTagName('sourcetext')[0];
 
                         var perr = err.getElementsByTagName('parsererror')[0];
                         var srcTxt = perr.removeChild(srcTxt);
 
-                        x2h.output.innerHTML += '<li>' + perr.textContent.replace(/\n/g, '<br />') + '<br />'
-                            + x2h.htmlentities(srcTxt.textContent).replace(/\n/, '<br />') + '</li>';
+                        var li = x2h.output.appendChild(document.createElement('li'));
+
+                        var arr = perr.textContent.split('\n');
+                        for(var i=0; i<arr.length; i++) {
+                            li.appendChild(document.createTextNode(arr[i]));
+                            li.appendChild(document.createElement('br'));
+                        }
+
+                        arr = srcTxt.textContent.split('\n');
+                        for(var i=0; i<arr.length; i++) {
+                            li.appendChild(document.createTextNode(arr[i]));
+                            li.appendChild(document.createElement('br'));
+                        }
                     }
 
                     // Keep track of how many files have been processed
@@ -153,12 +164,6 @@ var x2h = {
             // Read the file
             reader.readAsText(f);        
         }
-    },
-
-    // Quick, lazy, printable html
-    htmlentities: function(str) {
-        str = str.replace(/</g, '&lt;');
-        return str.replace(/</g, '&gt;');
     },
 
     // From here: http://www.html5rocks.com/en/tutorials/file/dndfiles/#toc-selecting-files-dnd
