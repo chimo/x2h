@@ -131,8 +131,7 @@ var x2hweb = {
                         x2hweb.dropZone.innerHTML = 'File ' + (x2hweb.completedCount+1) + ' of ' + files.length + ' completed';
                     }
                     catch(err) {
-                        console.log(err); // TODO: Proper error handling
-                        /* var srcTxt = err.getElementsByTagName('sourcetext')[0];
+                        var srcTxt = err.getElementsByTagName('sourcetext')[0];
 
                         var perr = err.getElementsByTagName('parsererror')[0];
                         var srcTxt = perr.removeChild(srcTxt);
@@ -149,7 +148,7 @@ var x2hweb = {
                         for(var i=0; i<arr.length; i++) {
                             li.appendChild(document.createTextNode(arr[i]));
                             li.appendChild(document.createElement('br'));
-                        } */
+                        }
                     } 
 
                     // Keep track of how many files have been processed
