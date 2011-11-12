@@ -18,6 +18,15 @@ var x2h = {
         img: ['longdesc']
     },
 
+    makeMap: function(arr) { // From http://ejohn.org/files/htmlparser.js
+        var obj = {}, items = arr; // str.split(",");
+        for ( var i = 0; i < items.length; i++ )
+            obj[ items[i] ] = true;
+            return obj;
+    },
+
+    selfClose: ['area','base','basefont','br','col','frame','hr','img','input','isindex','link','meta','param','embed'],
+
     /**
      * Performs multiple operations to convert a XHTML 1.0 Strict to HTML5
      *
@@ -26,6 +35,8 @@ var x2h = {
      */
     xhtmlToHtml5: function(html, filename) {
         x2h.msgs = [];
+
+        x2h.selfClose = x2h.makeMap(x2h.selfClose);
 
         // htmlparser.js chokes on Doctypes, so remove it and add HTML5 Doctype at the end
         var dtd_re = /<!doctype.*\r?\n?.*\.dtd">/i; // FIXME: That's one sucky regex right there...
@@ -39,17 +50,18 @@ var x2h = {
 
         var results = '';
 
-        HTMLParser(html, {
-            start: function(tag, attrs, unary) {
+        var parser = sax.parser(false, {lowercasetags: true});
+
+        parser.onopentag = function(tag) {
                 var hasClass = false;
                 
-                switch(tag) {
+                switch(tag.name) {
                     // Replace <acronym> with <abbr>
                     case 'acronym':
                         results += '<abbr';
 
-                        for ( var i = 0; i < attrs.length; i++ ) {
-                            results += " " + attrs[i].name + '="' + attrs[i].escaped + '"';
+                        for(key in tag.attributes) {
+                            results += " " + key + '="' + tag.attributes[key] + '"';
                         }                    
                     break;
                     
@@ -57,18 +69,18 @@ var x2h = {
                     case 'big':
                     case 'tt':
                         results += '<span';
-                        for ( var i = 0; i < attrs.length; i++ ) {
-                            if(attrs[i].name == 'class') {
-                                results += " " + attrs[i].name + '="' + attrs[i].escaped + ' ' + tag + '"';
+                        for(key in tag.attributes) {
+                            if(key == 'class') {
+                                results += " " + key + '="' + tag.attributes[key] + ' ' + tag.name + '"';
                                 hasClass = true;
                             }
                             else {
-                                results += " " + attrs[i].name + '="' + attrs[i].escaped + '"';
+                                results += " " + key + '="' + tag.attributes[key] + '"';
                             }
                         }
 
                         if(!hasClass) {
-                            results += ' class="' + tag + '"';
+                            results += ' class="' + tag.name + '"';
                         }
                     break;
                     
@@ -76,26 +88,26 @@ var x2h = {
                     case 'table':
                         results += '<table';
                         var clss = '', cs = '', cp = '';
-                        for ( var i = 0; i < attrs.length; i++ ) {
-                            if(attrs[i].name == 'summary') {
+                        for(key in tag.attributes) {
+                            if(key == 'summary') {
                                 continue;
                             }
                         
-                            if(attrs[i].name == 'class') {
-                                clss = attrs[i].escaped;
+                            if(key == 'class') {
+                                clss = tag.attributes[key];
                             }
                             else {
-                                if(attrs[i].name == 'cellspacing') {
-                                    cs = 'cellspacing' + attrs[i].escaped;
+                                if(key == 'cellspacing') {
+                                    cs = 'cellspacing' + tag.attributes[key];
                                     x2h.msgs.push(filename + ' is using class: ' + cs);
                                 }
                                 else {
-                                    if(attrs[i].name == 'cellpadding') {
-                                        cp = 'cellpadding' + attrs[i].escaped;
+                                    if(key == 'cellpadding') {
+                                        cp = 'cellpadding' + tag.attributes[key];
                                         x2h.msgs.push(filename + ' is using class: ' + cp);
                                     }
                                     else {
-                                        results += " " + attrs[i].name + '="' + attrs[i].escaped + '"';
+                                        results += " " + key + '="' + tag.attributes[key] + '"';
                                     }
                                 }
                             }
@@ -106,32 +118,34 @@ var x2h = {
                         }
                     break;
                     default:
-                        if(x2h.deprecated[tag]) { // If tag is one that had some of its attributes deprecated by HTML5
-                            results += '<' + tag;
-                            for(var i=0; i<attrs.length; i++) { // Check all its attributes
+                        if(x2h.deprecated[tag.name]) { // If tag is one that had some of its attributes deprecated by HTML5
+                            results += '<' + tag.name;
+                            for(key in tag.attributes) {
                                 var skip = false;
-                                for(var j=0; j<x2h.deprecated[tag].length; j++) { // Compare them to the list of deprecated attributes
-                                    if(x2h.deprecated[tag][j] == attrs[i].name) { // If it's one if the deprecated attrs.
+                                for(var j=0; j<x2h.deprecated[tag.name].length; j++) { // Compare them to the list of deprecated attributes
+                                    if(x2h.deprecated[tag.name][j] == key) { // If it's one if the deprecated attrs.
                                         skip = true; // flag it
                                         break; // stop looping through the deprecated list
                                     }
                                 }
                                 if(!skip) { // If the current attribute was _not_ flagged as a deprecated one, keep it.
-                                    results += " " + attrs[i].name + '="' + attrs[i].escaped + '"';
+                                    results += " " + key + '="' + tag.attributes[key] + '"';
                                 }
                             }
                         }
                         else { // If the tag and all its attributes are still valid in HTML5, keep as-is
-                            results += "<" + tag;
-                            for(var i=0; i<attrs.length; i++) {
-                                results += " " + attrs[i].name + '="' + attrs[i].escaped + '"';
+                            results += "<" + tag.name;
+                            for(key in tag.attributes) {
+                                results += " " + key + '="' + tag.attributes[key] + '"';
                             }                        
                         }
                 }
 
-                results += (unary ? " /" : "") + ">";
-            },
-            end: function(tag) {
+                results += (x2h.selfClose[tag.name] ? " /" : "") + ">";
+
+            };
+
+            parser.onclosetag = function(tag) {
                 if(tag == 'acronym') {
                     results += '</abbr>';
                 }
@@ -140,17 +154,30 @@ var x2h = {
                         results += '</span>'
                     }
                     else {
-                        results += '</' + tag + '>';
+                        if(!x2h.selfClose[tag]) {
+                            results += '</' + tag + '>';
+                        }
                     }
                 }
-            },
-            chars: function(text) {
+            };
+
+            parser.ontext = function(text) {
                 results += text;
-            },
-            comment: function(text) {
+            };
+
+            parser.oncomment = function(text) {
                 results += '<!--' + text + '-->';
-            }
-        });
+            };
+
+            parser.onerror = function(e) {
+                console.log('Error: ' + e); // TODO: true error handling
+            };
+
+            parser.onscript = function(text) {
+                results += text;
+            };
+
+            parser.write(html).close();
 
         // If we removed the original dtd, put the HTML5 in its place
         if(dtd != null) {

@@ -109,7 +109,7 @@ var x2hweb = {
                     x2hweb.output.innerHTML += '<li>Error reading file: <em>' + theFile.name + '</em> (' + msg + '). Skipping.</li>';
                 };
             })(f);
-
+            
             // Callback function after the file is read
             reader.onload = (function(theFile) {
                 return function(e) { 
@@ -118,15 +118,21 @@ var x2hweb = {
                     
                     try {
                         html5Content = x2h.xhtmlToHtml5(e.target.result, theFile.name);
+                        var txt = null;
+                        var li = null;
                         for(var i=0; i<x2h.msgs.length; i++) {
-                            x2hweb.output.innerHTML += '<li>' + x2h.msgs[i] + '</li>';
+                            txt = document.createTextNode(x2h.msgs[i]);
+                            li = document.createElement('li');
+                            li.appendChild(txt);
+                            x2hweb.output.appendChild(li);
                         }
                         // Add the clean file to the zip archive
                         x2hweb.zip.add(theFile.name, html5Content);
                         x2hweb.dropZone.innerHTML = 'File ' + (x2hweb.completedCount+1) + ' of ' + files.length + ' completed';
                     }
                     catch(err) {
-                        var srcTxt = err.getElementsByTagName('sourcetext')[0];
+                        console.log(err); // TODO: Proper error handling
+                        /* var srcTxt = err.getElementsByTagName('sourcetext')[0];
 
                         var perr = err.getElementsByTagName('parsererror')[0];
                         var srcTxt = perr.removeChild(srcTxt);
@@ -143,7 +149,7 @@ var x2hweb = {
                         for(var i=0; i<arr.length; i++) {
                             li.appendChild(document.createTextNode(arr[i]));
                             li.appendChild(document.createElement('br'));
-                        }
+                        } */
                     }
 
                     // Keep track of how many files have been processed
