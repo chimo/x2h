@@ -1,0 +1,47 @@
+<!-- MENU-LOCATION=NONE -->
+<html>
+    <head>
+        <title>XHTML 1.0 Strict to HTML5 batch converter - SAX.js</title>
+
+        <script src="sax.js"></script>
+        <script src="x2h-sax.js"></script>
+
+        <script>
+            // FIXME: what is this?
+            function canAcceptCommand() {
+                return true;
+            }
+            
+            function run() {
+                var folderURL = dw.browseForFolderURL('Select Folder');
+                
+                // If user clicked 'cancel'
+                if(folderURL == "") {
+                    return;
+                }
+                
+                // Create an empty document to work with
+                dreamweaver.createDocument();
+                
+                var fileMask = "*.html"; 
+                var list = DWfile.listFolder(folderURL + "/" + fileMask, "files"); 
+
+                var content = '';
+                var msgs = [];
+                
+                for(var i=0; i<list.length; i++) {
+                    if( (content = DWfile.read(folderURL + "/" + list[i])) ) { // TODO: Write to DW console if read() failed
+                        DWfile.write(folderURL + "/" + list[i], x2h.xhtmlToHtml5(content, list[i])); // TODO: Check if write() succeeded; write to DW console if not
+                        msgs = x2h.msgs.concat(msgs);
+                    }
+                }
+                
+                var dom = dw.getDocumentDOM("document");
+                dom.documentElement.outerHTML = msgs.join("\n") + "\n\nDone!";
+                
+            }
+        </script>
+    </head>
+    <body onLoad="run()">
+    </body>
+</html>

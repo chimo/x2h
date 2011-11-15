@@ -1,0 +1,56 @@
+﻿<macromedia-extension
+	name="XHTML to HTML5"
+	version="0.1"
+	type="Command">
+
+	<!-- Describe the author -->
+    <author name="Stéphane Bérubé" />
+
+	<!-- List the required/compatible products -->
+    <products>
+		<product name="Dreamweaver" version="6" primary="true" /> 
+	</products> 
+
+	<!-- Describe the extension -->
+	<description>
+        <![CDATA[
+            Batch XHTML 1.0 Strict to HTML5 conversion.
+            <a href="http://github.com/chimo/x2h">http://github.com/chimo/x2h</a>
+            
+            <p><strong>Warning!</strong> This extension will overwrite your files. Please ensure you have a backup in case things go wrong.</p>
+            Usage
+            <ol>
+                <li>Access 'XHTML to HTML5' entry in the Commands menu.</li><li>Select the folder containing your XHTML files.</li><li>Wait while DW converts the files</li>
+            </ol>
+            What exacly does this do to my documents?
+            <ul>
+                <li>Replaces &lt;acronym&gt; with &lt;abbr&gt;</li><li>Replaces &lt;big&gt; with &lt;span class="big"&gt;</li><li>Replaces &lt;tt&gt; with &lt;span class="tt"&gt;</li><li>Removes @summary from &lt;table&gt;</li><li>Replaces @cellpadding/@cellspacing with a class (ex: class="cellpadding5" instead of cellpadding="5") on &lt;table&gt;</li><li>Removes @nohref from &lt;area&gt;</li><li>Removes @profile from &lt;head&gt;</li><li>Removes @archive, @classid, @codebase, @codetype, @declare, @standby from &lt;object&gt;</li><li>Removes @type and @valuetype from &lt;param&gt;</li><li>Removes @charset, @name, @rev and @shape from &lt;a&gt;</li><li>Removes @charset and @rev from &lt;link&gt;</li><li>Removes @abbr, @axis, @valid from &lt;td&gt; and &lt;th&gt;</li><li>Removes @scope from &lt;td&gt;</li><li>Removes @scheme from &lt;meta&gt;</li><li>Removes @longdesc from &lt;img&gt;</li>
+            </ul>
+        ]]>
+	</description>
+
+	<!-- Describe where the extension shows in the UI of the product -->
+	<ui-access>
+        <![CDATA[
+            Access from the 'XHTML to HTML5' entry in the Commands menu.
+        ]]>
+	</ui-access>
+
+	<!-- Describe the files that comprise the extension -->
+	<files>
+		<file source="dw-x2h.htm" destination="$dreamweaver/configuration/commands" />
+        <file source="js/lib/sax.js" destination="$dreamweaver/configuration/commands" />
+        <file source="js/x2h-sax.js" destination="$dreamweaver/configuration/commands" />
+	</files>
+
+	<!-- Describe the changes to the configuration -->
+		<configuration-changes>
+		
+		<!-- Add an entry to the commands menu -->
+		<menu-insert insertAfter="DWMenu_Commands_SortTable" skipSeparator="true">
+			<menuitem name="XHTML to HTML5" file="Commands/dw-x2h.htm" id="x2h" />
+			<separator id="x2h_Separator" />
+		</menu-insert>
+	
+	</configuration-changes>
+</macromedia-extension>
