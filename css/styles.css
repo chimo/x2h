@@ -3,12 +3,25 @@
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     border-radius: 5px;
+    color: #BBB;
+    font: 20pt bold;
+    margin-bottom: 12px;
     padding: 25px;
     text-align: center;
-    font: 20pt bold 'Vollkorn';
-    color: #BBB;
 }
 
-#toggle-options a:link, #toggle-options a:visited {color: #369;}
-/* ul {float:left; width: 45%}
-ul ul {float: none;} */
+#unsupported {
+    border: 1px solid #C00;
+    background-color: #FFC;
+    margin: 0 10px 12px 10px;
+    padding: 5px;
+}
+
+#unsupported ul {margin-top: 0;}
+
+#output {margin:0;}
+
+#contact {text-align: right;}
+#contact a:link, #contact a:visited {color: #666; font-size: smaller;}
+
+.hide {display: none;}

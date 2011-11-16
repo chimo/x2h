@@ -11,7 +11,34 @@
 
     <body>
         <h1>XHTML 1.0 Strict to HTML5</h1>
-        <div id="drop_zone">Drop XHTML files here</div>
+        
+        <div id="unsupported">
+            <p>
+                It seems your browser doesn't support the necessary requirement to use this tool.<br />
+                You can still try the tool to see if this error message is wrong.
+            </p>
+            <p style="margin-bottom: 0;">
+                Some supported browsers are:
+            </p>
+            <ul>
+                <li><a href="http://mozilla.com">Mozilla Firefox</a> 3.6.21 or later</li>
+                <li><a href="http://google.com/chrome">Google Chrome</a> 6.0 or later</li>
+                <li><a href="http://opera.org">Opera</a> 11.1 or later</li>
+            </ul>
+            <p>If you know you have one of the browsers listed above, check that JavaScript is enabled.</p>
+            
+            <p>If you have a supported browser, JavaScript is enabled and the tool still doesn't work, <a href="https://github.com/chimo/x2h/issues">drop me a line</a> with your browser name and version.</p>
+        </div>
+        
+        <div id="drop_zone" class="hide">Drop XHTML files here</div>
+ 
+        <p id="or" class="hide"><em>or</em> browse to your XHTML files with the following form:</p>
+ 
+        <div id="frm" class="hide">
+            <form action="#">
+                <input id="input" type="file" multiple="multiple" accept="text/html" />
+            </form>
+        </div>
 
 <!-- TODO: Let the user decide which operations to perform
         <h2 id="toggle-options"><a href="#">Options</a></h2>
@@ -185,6 +212,8 @@
         </div> -->
 
         <h2>Output</h2>
-        <output><ul id="output" style="margin: 0;"></ul></output>
+        <output><ul id="output"></ul></output>
+        
+        <p id="contact"><a href="https://github.com/chimo/x2h">x2h home and contact</a></p>
     </body>
 </html>

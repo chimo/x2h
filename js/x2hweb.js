@@ -3,14 +3,42 @@ var x2hweb = {
     completedCount: 0,
     
     init: function() {
-        // Messages
+        // Check for FileReader support
+        if(typeof FileReader === undefined) {
+        
+            return; // Exit if not supported
+        }
+    
+        x2hweb.output = document.getElementById('output'); // Output for on-screen messages
+        x2hweb.dropZone = document.getElementById('drop_zone'); // Drag and drop target
+        x2hweb.input = document.getElementById('input'); // Form input
 
-        x2hweb.output = document.getElementById('output');
-        // Setup the dnd listeners.
-        x2hweb.dropZone = document.getElementById('drop_zone'),
-        x2hweb.dropZone.addEventListener('dragover', x2hweb.handleDragOver, false);
-        x2hweb.dropZone.addEventListener('drop', x2hweb.handleFileSelect, false);
+        var dnd = false, input = false;
+        
+        // If the browser supports drag-and-drop
+        if('draggable' in document.createElement('span')) {
+            dnd = true;
+            x2hweb.dropZone.removeAttribute('class'); // Make drop_zone visible
+            x2hweb.dropZone.addEventListener('dragover', x2hweb.handleDragOver, false); // Setup drag listener
+            x2hweb.dropZone.addEventListener('drop', x2hweb.handleFileSelect, false); // Setup drop listener
+        }
+        
+        var i = document.createElement('input');
+        i.setAttribute('type', 'file');
+        if(i.type == 'file') { // If the browser supports <input type="file">
+            input = true;
+            document.getElementById('frm').setAttribute('class', ''); // Make form visible        
+            x2hweb.input.addEventListener('change', x2hweb.handleFileSelect, false); // Setup form input listener
+        }
 
+        if(dnd && input) {
+            document.getElementById('or').removeAttribute('class');
+        }
+        
+        if(dnd || input) { // Drag-and-drop or <input type="file"> is supported, hide the error message
+            document.getElementById('unsupported').setAttribute('class', 'hide');
+        }
+        
         /**
          * Returns whether the zip file is empty or not
          *
@@ -39,14 +67,23 @@ var x2hweb = {
         x2hweb.dropZone.addEventListener('dragover', x2hweb.handleDragOver, false);
         x2hweb.dropZone.addEventListener('drop', x2hweb.handleFileSelect, false);
         x2hweb.dropZone.innerHTML = 'Drop XHTML files here';
+        
+        // Re-enable form field
+        x2hweb.input.removeAttribute('disabled');
     },
 
     handleFileSelect: function(evt) {
         evt.stopPropagation();
         evt.preventDefault();
-
-        // FileList object
-        var files = evt.dataTransfer.files;
+        
+        var files = null;
+        if(evt.dataTransfer === undefined) { // Form input
+            files = evt.target.files;
+        }
+        else { // Drag and drop
+            files = evt.dataTransfer.files;
+        }
+        
         // This sometimes happen for whatever reason (with Thunar + Firefox, for example)
         if(files.length == 0) {
             x2hweb.output.innerHTML = 'Number of files dropped was zero';
@@ -62,6 +99,9 @@ var x2hweb = {
         // Remove event listener so that we can't drop more files until we're done.    
         x2hweb.dropZone.removeEventListener('dragover', x2hweb.handleDragOver, false);
         x2hweb.dropZone.removeEventListener('drop', x2hweb.handleFileSelect, false);    
+        
+        // Disable form field
+        x2hweb.input.setAttribute('disabled', 'disabled');
         
         x2hweb.dropZone.innerHTML = 'Please wait...';
         x2hweb.completedCount = 0; // Ensure we're starting from zero when we're given a new batch of files to process
@@ -107,6 +147,14 @@ var x2hweb = {
                     }
 
                     x2hweb.output.innerHTML += '<li>Error reading file: <em>' + theFile.name + '</em> (' + msg + '). Skipping.</li>';
+                    
+                    // Keep track of how many files have been processed
+                    x2hweb.completedCount++; 
+                    
+                    // If this is the last file, generate the .zip and offer the download
+                    if(x2hweb.completedCount == files.length) {
+                        x2hweb.finalize();
+                    }                    
                 };
             })(f);
             
