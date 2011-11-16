@@ -54,3 +54,4 @@ There are two "products" in here:
 ## 3rd Party
 
 Using sax.js by Isaac Z. Schlueter as a JS SAX library: https://github.com/isaacs/sax-js
+Using jszip by Stuart Knightley: http://jszip.stuartk.co.uk/
