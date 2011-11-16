@@ -48,6 +48,7 @@ There are two "products" in here:
 * The tool has been tested with: 
     * Firefox 3.6.21, 6.0.2, 7.0.1, 8.0a2
     * Chromium 14.0.835.186
+    * Opera 11.50
     * Dreamweaver CS5
 
 ## 3rd Party
