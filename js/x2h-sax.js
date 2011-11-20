@@ -2,9 +2,17 @@
 //  * Firefox 3.6.21, 6.0.2, 7.0.1, 8.0a2
 //  * Chromium 14.0.835.186
 
+self.addEventListener('message', function(e) {
+    self.importScripts('lib/sax.js');
+    var json = {html: x2h.xhtmlToHtml5(e.data.xhtml, e.data.filename), filename: e.data.filename, msgs: x2h.msgs};
+    self.postMessage(json);
+}, false);
+
+
 var x2h = {
     msgs: [],
 
+    // Allowed XHTML 1.0 Strict attributes that are deprecated in HTML5
     deprecated: {
         area: ['nohref'],
         head: ['profile'],
@@ -19,7 +27,7 @@ var x2h = {
     },
 
     makeMap: function(arr) { // From http://ejohn.org/files/htmlparser.js
-        var obj = {}, items = arr; // str.split(",");
+        var obj = {}, items = arr;
         for ( var i = 0; i < items.length; i++ )
             obj[ items[i] ] = true;
             return obj;

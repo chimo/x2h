@@ -1,11 +1,13 @@
 var x2hweb = {
-    // Global counter FIXME: global?
+    // Counter
     completedCount: 0,
+
+    // Worker
+    worker: null,
     
     init: function() {
         // Check for FileReader support
         if(typeof FileReader === undefined) {
-        
             return; // Exit if not supported
         }
     
@@ -38,7 +40,41 @@ var x2hweb = {
         if(dnd || input) { // Drag-and-drop or <input type="file"> is supported, hide the error message
             document.getElementById('unsupported').setAttribute('class', 'hide');
         }
-        
+
+        x2hweb.worker = new Worker('js/x2h-sax.js');
+
+        x2hweb.worker.addEventListener('message', function(e) {
+            var txt = null,
+                li = null;
+
+            // Print messages
+            for(var i=0; i<e.data.msgs.length; i++) {
+                txt = document.createTextNode(e.data.msgs[i]);
+                li = document.createElement('li');
+                li.appendChild(txt);
+                x2hweb.output.appendChild(li);
+            }
+
+            // Add HTML5 content to the zip file
+            x2hweb.zip.add(e.data.filename, e.data.html);
+
+            // Keep track of how many files have been processed
+            x2hweb.dropZone.innerHTML = 'File ' + (x2hweb.completedCount+1) + ' of ' + x2hweb.nbFiles + ' completed';
+            x2hweb.completedCount++; 
+                    
+            // If this is the last file, generate the .zip and offer the download
+            if(x2hweb.completedCount == x2hweb.nbFiles) {
+               x2hweb.finalize();
+            }
+        }, false);
+
+        x2hweb.worker.addEventListener('error', function(e) {
+            // Print error message
+            var li = document.createElement('li');
+            li.innerHTML = 'Error: ' + e.message + '<br />Filename: ' + e.filename + '<br />Line: ' + e.lineno;
+            x2hweb.output.appendChild(li);
+        }, false);
+
         /**
          * Returns whether the zip file is empty or not
          *
@@ -90,6 +126,8 @@ var x2hweb = {
             return;
         }
 
+        x2hweb.nbFiles = files.length;
+
         // Clear old messages
         x2hweb.output.innerHTML = '';
         
@@ -123,7 +161,7 @@ var x2hweb = {
 
             // FIXME: I could not get Firefox to use the onerror event handler. Even when getting: 
             // Component returned failure code: 0x80520012 (NS_ERROR_FILE_NOT_FOUND) [nsIDOMFileReader.readAsText]
-            reader.onerror = (function(theFile) {
+            reader.onerror = (function(theFile) { // TODO: Use addEventListener
                 return function(e) {
                     var msg = '';
                     switch(e.target.error.code) {
@@ -159,24 +197,18 @@ var x2hweb = {
             })(f);
             
             // Callback function after the file is read
-            reader.onload = (function(theFile) {
+            reader.onload = (function(theFile) { // TODO: Use addEventListener
                 return function(e) { 
                     // XHTML 1.0 Strict to HTML5 cleanup
                     var html5Content = ''; 
                     
                     try {
-                        html5Content = x2h.xhtmlToHtml5(e.target.result, theFile.name);
+                        // Send XHTML to Worker
+                        var json = {xhtml: e.target.result, filename: theFile.name};
+                        x2hweb.worker.postMessage(json);
+
                         var txt = null;
                         var li = null;
-                        for(var i=0; i<x2h.msgs.length; i++) {
-                            txt = document.createTextNode(x2h.msgs[i]);
-                            li = document.createElement('li');
-                            li.appendChild(txt);
-                            x2hweb.output.appendChild(li);
-                        }
-                        // Add the clean file to the zip archive
-                        x2hweb.zip.add(theFile.name, html5Content);
-                        x2hweb.dropZone.innerHTML = 'File ' + (x2hweb.completedCount+1) + ' of ' + files.length + ' completed';
                     }
                     catch(err) {
                         console.log(err); // TODO: Proper error handling
@@ -200,13 +232,6 @@ var x2hweb = {
                         } */
                     }
 
-                    // Keep track of how many files have been processed
-                    x2hweb.completedCount++; 
-                    
-                    // If this is the last file, generate the .zip and offer the download
-                    if(x2hweb.completedCount == files.length) {
-                        x2hweb.finalize();
-                    }
                 };
             })(f);
 
