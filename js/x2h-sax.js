@@ -2,12 +2,13 @@
 //  * Firefox 3.6.21, 6.0.2, 7.0.1, 8.0a2
 //  * Chromium 14.0.835.186
 
-self.addEventListener('message', function(e) {
-    self.importScripts('lib/sax.js');
-    var json = {html: x2h.xhtmlToHtml5(e.data.xhtml, e.data.filename), filename: e.data.filename, msgs: x2h.msgs};
-    self.postMessage(json);
-}, false);
-
+if(typeof(isDW) == "undefined") { // If we're not running in Dreamweaver, use Web Workers
+    self.addEventListener('message', function(e) {
+        self.importScripts('lib/sax.js');
+        var json = {html: x2h.xhtmlToHtml5(e.data.xhtml, e.data.filename), filename: e.data.filename, msgs: x2h.msgs};
+        self.postMessage(json);
+    }, false);
+}
 
 var x2h = {
     msgs: [],
