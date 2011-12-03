@@ -4,7 +4,11 @@
 
 if(typeof(isDW) == "undefined") { // If we're not running in Dreamweaver, use Web Workers
     self.addEventListener('message', function(e) {
-        self.importScripts('lib/sax.js');
+        // Only import the script once
+        if(typeof(sax) == 'undefined') {
+            self.importScripts('lib/sax.js'); /* https://github.com/isaacs/sax-js */
+        }
+        
         var json = {html: x2h.xhtmlToHtml5(e.data.xhtml, e.data.filename), filename: e.data.filename, msgs: x2h.msgs};
         self.postMessage(json);
     }, false);
