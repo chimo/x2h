@@ -46,7 +46,7 @@ There are two "products" in here:
 * If you want to use this locally (file://) with Chrome/Chromium you need to start the browser with: _--allow-file-access-from-files --allow-file-access_
   Otherwise you'll get "Security error".
 * The tool has been tested with: 
-    * Firefox 3.6.21, 6.0.2, 7.0.1, 8.0a2
+    * Firefox 3.6.21, 6.0.2, 7.0.1, 8.0.1
     * Chromium 14.0.835.186
     * Opera 11.50
     * Dreamweaver CS5

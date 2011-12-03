@@ -1,7 +1,3 @@
-// Tested on:
-//  * Firefox 3.6.21, 6.0.2, 7.0.1, 8.0a2
-//  * Chromium 14.0.835.186
-
 if(typeof(isDW) == "undefined") { // If we're not running in Dreamweaver, use Web Workers
     self.addEventListener('message', function(e) {
         // Only import the script once
