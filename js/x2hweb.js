@@ -89,11 +89,36 @@ var x2hweb = {
         }            
     },
 
-    finalize: function() {
+    finalize: function() { // TODO: Error handling
         if(!x2hweb.zip.isEmpty()) {
             x2hweb.output.innerHTML += '<li>Done!</li>';
-            content = x2hweb.zip.generate();
-            location.href='data:application/zip;base64,'+content
+            content = x2hweb.zip.generate(true);
+
+            var bb = null;
+            if(window.MozBlobBuilder) {
+                bb = new MozBlobBuilder();
+            }
+            else if(window.WebKitBlobBuilder) {
+                bb = new WebKitBlobBuilder();
+            }
+
+            // Opera doesn't support BlobBuilder, so use base64 instead
+            if(bb == null) {
+                content = x2hweb.zip.generate();
+                location.href='data:application/zip;base64,'+content;
+            }
+            else {
+                var byteArray = new Uint8Array(content.length);
+                for(var i=0; i<content.length; i++) {
+                    byteArray[i] = content.charCodeAt(i) & 0xff;
+                }
+
+                bb.append(byteArray.buffer);
+                var b = bb.getBlob('application/zip');
+                var oURL = (window.URL || window.webkitURL);
+                oURL = oURL.createObjectURL(b);
+                location.href = oURL;
+            }
         }
         else {
             x2hweb.output.innerHTML += '<li>All given files were skipped. Nothing to download.</li>';
