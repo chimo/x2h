@@ -47,16 +47,6 @@ var x2h = {
 
         x2h.selfClose = x2h.makeMap(x2h.selfClose);
 
-        // htmlparser.js chokes on Doctypes, so remove it and add HTML5 Doctype at the end
-        var dtd_re = /<!doctype.*\r?\n?.*\.dtd">/i; // FIXME: That's one sucky regex right there...
-        var dtd = dtd_re.exec(html);
-
-        if(dtd != null) {
-            dtd = dtd[0];
-        }
-
-        html = html.replace(dtd_re, '');
-
         var results = '';
 
         var parser = sax.parser(false, {lowercasetags: true});
@@ -185,13 +175,12 @@ var x2h = {
             parser.onscript = function(text) {
                 results += text;
             };
+            
+            parser.ondoctype = function(text) {
+                results += '<!DOCTYPE html>'
+            };
 
             parser.write(html).close();
-
-        // If we removed the original dtd, put the HTML5 in its place
-        if(dtd != null) {
-            results  = '<!DOCTYPE html>' + results;
-        }
 
         return results;
     }
