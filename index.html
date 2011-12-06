@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>XHTML 1.0 Strict to HTML5</title>
+        <script src="js/lib/jszip.js"></script> <!-- http://jszip.stuartk.co.uk/ -->
+        <script src="js/x2hweb.js"></script> <!-- http://github.com/chimo -->
+        <link rel="stylesheet" href="css/styles.css" type="text/css" />
+    </head>
+
+    <body>
+        <h1>XHTML 1.0 Strict to HTML5</h1>
+        
+        <div id="unsupported">
+            <p>
+                It seems your browser doesn't support the necessary requirement to use this tool.<br />
+                You can still try the tool to see if this error message is wrong.
+            </p>
+            <p style="margin-bottom: 0;">
+                Some supported browsers are:
+            </p>
+            <ul>
+                <li><a href="http://mozilla.com">Mozilla Firefox</a> 3.6.21 or later</li>
+                <li><a href="http://google.com/chrome">Google Chrome</a> 6.0 or later</li>
+                <li><a href="http://opera.org">Opera</a> 11.1 or later</li>
+            </ul>
+            <p>If you know you have one of the browsers listed above, check that JavaScript is enabled.</p>
+            
+            <p>If you have a supported browser, JavaScript is enabled and the tool still doesn't work, <a href="https://github.com/chimo/x2h/issues">drop me a line</a> with your browser name and version.</p>
+        </div>
+        
+        <div id="drop_zone" class="hide">Drop XHTML files here</div>
+ 
+        <p id="or" class="hide"><em>or</em> browse to your XHTML files with the following form:</p>
+ 
+        <div id="frm" class="hide">
+            <form action="#">
+                <input id="input" type="file" multiple="multiple" accept="text/html" />
+            </form>
+        </div>
+
+<!-- TODO: Let the user decide which operations to perform
+        <h2 id="toggle-options"><a href="#">Options</a></h2>
+        <div style="margin-top: 12px;">
+            <form action="#" id="options">
+                <fieldset>
+                    <legend>Options</legend>
+                    <div>
+                        <input id="all" type="button" value="Select All" />
+                        <input id="none" type="button" value="Select None" />
+                        <input id="invert" type="button" value="Invert Selection" />
+                    </div>
+                    <ul>
+                        <li>
+                        <input checked="checked" id="acronyms" type="checkbox" value="{'action': 'replaceTag', 'old': 'acronym', 'new': 'abbr'}" />
+                            <label for="acronyms">Replace &lt;acronym&gt; with &lt;abbr&gt;?</label>
+                        </li>
+                        <li>
+                            <input checked="checked" id="big" type="checkbox" value="yes" />
+                            <label for="big">Replace &lt;big&gt; with &lt;span class="big"&gt;?</label>
+                        </li>
+                        <li>
+                            <input checked="checked" id="tt" type="checkbox" value="yes" />
+                            <label for="tt">Replace &lt;tt&gt; with &lt;span class="tt"&gt;?</label>
+                        </li>
+                        <li>
+                            <input checked="checked" id="longdesc" type="checkbox" value="yes" />
+                            <label for="longdesc">Remove @longdesc from &lt;img&gt;?</label>
+                        </li>
+                        <li>
+                            <input checked="checked" id="nohref" type="checkbox" value="yes" />
+                            <label for="nohref">Remove @nohref from &lt;area&gt;</label>
+                        </li>
+                        <li>
+                            <input checked="checked" id="profile" type="checkbox" value="yes" />
+                            <label for="profile">Remove @profile from &lt;head&gt;?</label>
+                        </li>
+                        <li>
+                            <input checked="checked" id="scheme" type="checkbox" value="yes" />
+                            <label for="scheme">Remove @scheme from &lt;meta /&gt;?</label>
+                        </li>
+                        <li>&lt;a&gt;
+                            <ul>
+                                <li>
+                                    <input checked="checked" id="a-charset" type="checkbox" value="yes" />
+                                    <label for="a-charset">Remove @charset?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="coords" type="checkbox" value="yes" />
+                                    <label for="coords">Remove @coords?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="name" type="checkbox" value="yes" />
+                                    <label for="name">Remove @name?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="a-rev" type="checkbox" value="yes" />
+                                    <label for="a-rev">Remove @rev?</label>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>&lt;link /&gt;
+                            <ul>
+                                <li>
+                                    <input checked="checked" id="link-charset" type="checkbox" value="yes" />
+                                    <label for="link-charset">Remove @charset?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="link-rev" type="checkbox" value="yes" />
+                                    <label for="link-rev">Remove @rev?</label>
+                                </li>
+                            </ul>
+                        </li>
+                    <li>&lt;object&gt;
+                            <ul>
+                                <li>
+                                    <input checked="checked" id="archive" type="checkbox" value="yes" />
+                                    <label for="archive">Remove @archive?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="classid" type="checkbox" value="yes" />
+                                    <label for="classid">Remove @classid?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="codebase" type="checkbox" value="yes" />
+                                    <label for="codebase">Remove @codebase?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="codetype" type="checkbox" value="yes" />
+                                    <label for="codetype">Remove @codetype?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="declare" type="checkbox" value="yes" />
+                                    <label for="declare">Remove @declare?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="standby" type="checkbox" value="yes" />
+                                    <label for="standby">Remove @standby?</label>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul>
+                        <li>&lt;param /&gt;
+                            <ul>
+                                <li>
+                                    <input checked="checked" id="type" type="checkbox" value="yes" />
+                                    <label for="type">Remove @type?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="valuetype" type="checkbox" value="yes" />
+                                    <label for="valuetype">Remove @valuetype?</label>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>&lt;table&gt;
+                            <ul>
+                                <li>
+                                    <input checked="checked" id="cellpadding" type="checkbox" value="yes" />
+                                    <label for="cellpadding">Remove @cellpadding?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="cellspacing" type="checkbox" value="yes" />
+                                    <label for="cellspacing">Remove @cellspacing?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="summary" type="checkbox" value="yes" />
+                                    <label for="summary">Remove @summary?</label>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>&lt;td&gt;
+                            <ul>
+                                <li>
+                                    <input checked="checked" id="td-abbr" type="checkbox" value="yes" />
+                                    <label for="td-abbr">Remove @abbr?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="td-axis" type="checkbox" value="yes" />
+                                    <label for="td-axis">Remove @axis?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="scope" type="checkbox" value="yes" />
+                                    <label for="scope">Remove @scope?</label>
+                                </li>
+                                <li>
+                                    <input checked="checked" id="td-valign" type="checkbox" value="yes" />
+                                    <label for="td-valign">Remove @valign?</label>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>&lt;th&gt;
+                            <ul>
+                                <li>
+                                <input checked="checked" id="th-abbr" type="checkbox" value="yes" />
+                                <label for="th-abbr">Remove @abbr?</label>
+                                </li>
+                                <li>
+                                <input checked="checked" id="th-axis" type="checkbox" value="yes" />
+                                <label for="th-axis">Remove @axis?</label>
+                                </li>
+                                <li>
+                                <input checked="checked" id="th-valign" type="checkbox" value="yes" />
+                                <label for="th-valign">Remove @valign?</label>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </fieldset>
+            </form>
+        </div> -->
+
+        <h2>Output</h2>
+        <output><ul id="output"></ul></output>
+        
+        <p id="contact"><a href="https://github.com/chimo/x2h">x2h home and contact</a></p>
+    </body>
+</html>
