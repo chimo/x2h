@@ -55,3 +55,6 @@ There are two "products" in here:
 
 Using sax.js by Isaac Z. Schlueter as a JS SAX library: https://github.com/isaacs/sax-js  
 Using jszip by Stuart Knightley: http://jszip.stuartk.co.uk/
+
+## Flattr this project
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=chimo&url=https://github.com/chimo/x2h&title=XHTML 1.0 Strict to HTML5&language=&tags=github&category=software) 
